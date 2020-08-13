@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="root" prefHeight="730.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Controller">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" text="New" />
+            <MenuItem mnemonicParsing="false" text="Open…" />
+            <Menu mnemonicParsing="false" text="Open Recent" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Close" />
+            <MenuItem mnemonicParsing="false" text="Save" />
+            <MenuItem mnemonicParsing="false" text="Save As…" />
+            <MenuItem mnemonicParsing="false" text="Revert" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Quit" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Создать">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#openCreateBookmakerWindow" text="Букмекер" />
+            <MenuItem mnemonicParsing="false" onAction="#openCreateCurrencyWindow" text="Валюта" />
+            <MenuItem mnemonicParsing="false" onAction="#openCreateDisciplineWindow" text="Дисциплина" />
+            <MenuItem mnemonicParsing="false" onAction="#openCreateTeamWindow" text="Команда" />
+            <MenuItem mnemonicParsing="false" onAction="#openCreateTournamentWindow" text="Турнир" />
+            <MenuItem mnemonicParsing="false" onAction="#openCreateBetWindow" text="Ставка" />
+            <SeparatorMenuItem mnemonicParsing="false" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Cut" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Copy" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Paste" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Delete" visible="false" />
+            <SeparatorMenuItem mnemonicParsing="false" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Select All" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Unselect All" visible="false" />
+          </items>
+        </Menu>
+            <Menu mnemonicParsing="false" text="Список">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#openListBookmakerWindow" text="Букмекеры" />
+                  <MenuItem mnemonicParsing="false" onAction="#openListDisciplineWindow" text="Дисциплины" />
+                  <MenuItem mnemonicParsing="false" onAction="#openListTournamentWindow" text="Турниры" />
+                  <MenuItem mnemonicParsing="false" onAction="#openListTeamWindow" text="Команды" />
+               </items>
+            </Menu>
+        <Menu mnemonicParsing="false" text="Тест">
+          <items>
+                  <Menu mnemonicParsing="false" text="Распечатать таблицу">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#testPrintTableBets" text="bets" />
+                        <MenuItem mnemonicParsing="false" onAction="#testPrintTableBookmakers" text="bookmakers" />
+                        <MenuItem mnemonicParsing="false" onAction="#testPrintTableCurrency" text="currency" />
+                        <MenuItem mnemonicParsing="false" onAction="#testPrintTableDisciplines" text="disciplines" />
+                        <MenuItem mnemonicParsing="false" onAction="#testPrintTableTournaments" text="tournaments" />
+                        <MenuItem mnemonicParsing="false" onAction="#testPrintTableTournamentDiscipline" text="tournament_discipline" />
+                        <MenuItem mnemonicParsing="false" onAction="#testPrintTableTeams" text="teams" />
+                    </items>
+                  </Menu>
+             <MenuItem mnemonicParsing="false" onAction="#testRecreateTables" text="Пересоздать таблицы" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+      <VBox maxWidth="1400.0" prefHeight="100.0" prefWidth="1400.0" spacing="10.0" translateX="100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="34.0" prefWidth="1203.0" text="Фильтр">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
+            <Separator prefWidth="200.0" />
+            <HBox maxWidth="1400.0" prefHeight="75.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Label maxWidth="110.0" minWidth="110.0" prefHeight="27.0" prefWidth="110.0" text="Дата начала">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <DatePicker fx:id="filterDateStart" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+                  <Label maxWidth="106.0" minWidth="106.0" prefWidth="106.0" text="Дисциплина">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="filterDisc" maxWidth="175.0" minWidth="175.0" prefWidth="175.0" />
+                  <Label maxWidth="94.0" minWidth="94.0" prefHeight="27.0" prefWidth="94.0" text="Команда 1">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="filterTeam1" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+                  <Label maxWidth="80.0" minWidth="80.0" prefHeight="27.0" prefWidth="80.0" text="Турнир">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="filterTour" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+                  <Label maxWidth="84.0" minWidth="84.0" prefHeight="27.0" prefWidth="84.0" text="Букмекер">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="filterBook" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+               </children>
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox maxWidth="1200.0" prefHeight="75.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Label minWidth="110.0" prefHeight="27.0" prefWidth="110.0" text="Дата конца">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <DatePicker fx:id="filterDateEnd" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+                  <Label maxWidth="106.0" minWidth="106.0" prefHeight="27.0" prefWidth="106.0" text="Результат">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox fx:id="filterResult" maxWidth="175.0" minWidth="175.0" prefWidth="175.0" />
+                  <Label maxWidth="94.0" minWidth="94.0" prefHeight="27.0" prefWidth="94.0" text="Команда 2">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="filterTeam2" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+                  <Label maxWidth="80.0" minWidth="80.0" prefWidth="80.0" text="Событие">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="filterEvent" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+                  <Label maxWidth="124.0" minWidth="124.0" prefHeight="27.0" prefWidth="124.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="filterButton" maxWidth="120.0" minWidth="120.0" mnemonicParsing="false" onAction="#fillTable" prefHeight="25.0" prefWidth="120.0" text="Искать">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+            <TableView fx:id="mainTable" layoutX="100.0" layoutY="14.0" prefHeight="450.0" prefWidth="1400.0">
+              <columns>
+                  <TableColumn fx:id="tableId" editable="false" minWidth="0.0" prefWidth="0.0" sortable="false" text="Id" visible="false" />
+                <TableColumn fx:id="tableDate" prefWidth="105.0" text="Дата" />
+                <TableColumn fx:id="tableDisc" prefWidth="120.0" text="Диспиплина" />
+                  <TableColumn fx:id="tableTeam1" prefWidth="130.0" text="Команда 1" />
+                  <TableColumn fx:id="tableTeam2" prefWidth="130.0" text="Команда 2" />
+                  <TableColumn fx:id="tableEvent" prefWidth="109.0" text="Событие" />
+                  <TableColumn fx:id="tableBet" prefWidth="100.0" text="Ставка" />
+                  <TableColumn fx:id="tableCoef" prefWidth="64.0" text="Кэф" />
+                  <TableColumn fx:id="tableResult" prefWidth="110.0" text="Результат" />
+                  <TableColumn fx:id="tableProfit" prefWidth="107.0" text="Профит" />
+                  <TableColumn fx:id="tableTotal" prefWidth="95.0" text="Всего" />
+                  <TableColumn fx:id="tableIsTotal" maxWidth="100.0" prefWidth="60.0" text="Тотал?" />
+                  <TableColumn fx:id="tableCashOut" maxWidth="100.0" prefWidth="70.0" text="Кэш-аут?" />
+                  <TableColumn fx:id="tableTour" minWidth="0.0" prefWidth="138.0" text="Турнир" />
+                  <TableColumn fx:id="tableBook" prefWidth="150.0" text="Букмекер" />
+                  <TableColumn fx:id="tableControl" maxWidth="150.0" prefWidth="105.0" sortable="false" text="Управление" />
+              </columns>
+            </TableView>
+            <Button layoutX="1380.0" layoutY="494.0" mnemonicParsing="false" onAction="#openCreateBetWindow" prefHeight="25.0" prefWidth="120.0" text="Ставка">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+      </children>
+    </AnchorPane>
+  </children>
+</VBox>
