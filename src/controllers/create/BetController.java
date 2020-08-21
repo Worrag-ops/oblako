@@ -2,7 +2,11 @@ package controllers.create;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import application.AutoCompleteComboBoxListener;
 import entities.Bet;
@@ -15,6 +19,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -34,7 +39,7 @@ import storage.Teams;
 import storage.Tournaments;
 import util.JavaFXUtil;
 
-public class BetController {
+public class BetController implements Initializable {
 	
 	@FXML private TextField coefField;
 	@FXML private TextField betField;
@@ -58,8 +63,8 @@ public class BetController {
 	
 		  private boolean isCashOut = false;
 
-	@FXML 
-	public void initialize() {
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		datePick.setValue(LocalDate.now());
 		
 		JavaFXUtil.setDoubleField(coefField);
@@ -145,8 +150,7 @@ public class BetController {
 		boolean isTotal = totalChkBox.isSelected();
 		
 		if ((date == null || discName == null || teamName1 == null || teamName2 == null || tourName == null || bookName == null || betEvent.equals("") || coefField.getText().equals("") || betField.getText().equals("")) || isCashOut && cashOutField.getText().equals("")) {
-			betError.setTextFill(Paint.valueOf("RED"));
-			betError.setText("Необходимо заполнить пустые поля");
+			setErrorLabelMessage(Paint.valueOf("RED"), "Необходимо заполнить пустые поля");
 			return;			
 		}
 		
@@ -154,16 +158,35 @@ public class BetController {
         BigDecimal betValue = BigDecimal.valueOf(Double.valueOf(betField.getText()));		
 		
 		if (teamName1.equals(teamName2)) {
-			betError.setTextFill(Paint.valueOf("RED"));
-			betError.setText("Две команды не могут быть одинаковыми");
+			setErrorLabelMessage(Paint.valueOf("RED"), "Две команды не могут быть одинаковыми");
 			return;				
 		}
 		
 		Discipline discipline = Disciplines.getInstance().get(discName);
 		Team team1 = Teams.getInstance().get(teamName1, discipline);
+		if (team1 == null) { //if team doesn't exist, we will create it
+			team1 = new Team(teamName1, discipline);
+			Teams.getInstance().add(team1);
+			team1.save();
+		}
 		Team team2 = Teams.getInstance().get(teamName2, discipline);	
+		if (team2 == null) { //if team doesn't exist, we will create it
+			team2 = new Team(teamName2, discipline);
+			Teams.getInstance().add(team2);
+			team2.save();
+		}
 		System.out.println(team1.getName() + " " + team2.getName());
 		Tournament tournament = Tournaments.getInstance().get(tourName);
+		if (tournament == null) { //if tournament doesn't exist, we will create it
+			List <Discipline> tournamentDiscipline = new ArrayList<>();
+			tournamentDiscipline.add(discipline);
+			tournament = new Tournament(tourName, tournamentDiscipline, BigDecimal.ZERO);
+			Tournaments.getInstance().add(tournament);
+			tournament.save();
+		} else if (!tournament.hasDiscipline(discipline)) { //if the tournament does not have the selected discipline, we will add it
+			tournament.addDiscipline(discipline);
+		}
+		
 		BigDecimal profit;
 		// Calculating profit
 		if (result.equals("Победа")) {
@@ -178,8 +201,7 @@ public class BetController {
 		
 		Bookmaker bookmaker = Bookmakers.getInstance().get(bookName);	
 		if (bookmaker.getWallet().getMoney().compareTo(betValue) < 0) {
-			betError.setTextFill(Paint.valueOf("RED"));
-			betError.setText("На счету недостаточно средств!");
+			setErrorLabelMessage(Paint.valueOf("RED"), "На счету недостаточно средств!");
 			return;				
 		}
 		
@@ -187,8 +209,7 @@ public class BetController {
 		bet = new Bet(date, discipline, team1, team2, tournament, betEvent, coef, betValue, result, isTotal, isCashOut, bookmaker, profit);	
 
 		if(!bet.save()) {
-			betError.setTextFill(Paint.valueOf("RED"));
-			betError.setText("Ошибка базы данных");
+			setErrorLabelMessage(Paint.valueOf("RED"), "Ошибка базы данных");
 			return;	
 		}
 		
@@ -197,34 +218,35 @@ public class BetController {
 			if (!isTotal) {
 				team1.setProfit(team1.getProfit().add(profit).setScale(2, RoundingMode.HALF_UP));	
 				if(!team1.update()) {
-					betError.setTextFill(Paint.valueOf("RED"));
-					betError.setText("Ошибка базы данных (team)");
+					setErrorLabelMessage(Paint.valueOf("RED"), "Ошибка базы данных (team)");
 					return;					
 				}
 			}
 			tournament.setProfit(tournament.getProfit().add(profit));
 			if(!tournament.update()) {
-				betError.setTextFill(Paint.valueOf("RED"));
-				betError.setText("Ошибка базы данных (tournament)");
+				setErrorLabelMessage(Paint.valueOf("RED"), "Ошибка базы данных (tournament)");
 				return;					
 			}
 			
 			bookmaker.getWallet().setMoney(bookmaker.getWallet().getMoney().add(profit));	
 			
 			if (!bookmaker.update()){
-				betError.setTextFill(Paint.valueOf("RED"));
-				betError.setText("Ошибка базы данных (bookmaker)");
+				setErrorLabelMessage(Paint.valueOf("RED"), "Ошибка базы данных (bookmaker)");
 				return;					
 			}
 		}
 		
 		Bets.getInstance().updateTotals(bookmaker);
-		betError.setTextFill(Paint.valueOf("GREEN"));
-		betError.setText("Ставка успешно записана!");
-		//discCombo.setValue(null);
+		setErrorLabelMessage(Paint.valueOf("GREEN"), "Ставка успешно записана!");
 		coefField.setText("");
 		betField.setText("");
 		betEventField.setText("");
 	}
+	
+	private void setErrorLabelMessage(Paint color, String message) {
+		betError.setTextFill(color);
+		betError.setText(message);		
+	}
+
 	
 }
