@@ -1,9 +1,11 @@
 package controllers.create;
 
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import application.AutoCompleteComboBoxListener;
@@ -14,6 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -30,7 +33,7 @@ import javafx.stage.Stage;
 import storage.Disciplines;
 import storage.Tournaments;
 
-public class TournamentController {
+public class TournamentController implements Initializable {
 	@FXML private ScrollPane scroll;
 	@FXML private ComboBox<String> tournCombo;
 	@FXML private TextField tournName;
@@ -46,7 +49,8 @@ public class TournamentController {
     private int currentChild = 3;
     private int countDisciplines = 1;
 	
-    public void initialize(){ //fill combobox with disciplines
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		ObservableList<String> discps = FXCollections.observableArrayList();
 		for (Discipline d : Disciplines.getInstance().getAll()) {
 			discps.add(d.getName());

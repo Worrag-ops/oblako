@@ -1,17 +1,17 @@
 package controllers.edit;
 
 import java.math.BigDecimal;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-import controllers.list.ListDisciplineController;
 import controllers.list.ListTeamController;
 import entities.Bet;
 import entities.Discipline;
 import entities.Team;
-import h2.ConnectH2;
-import h2.H2EntityIdExtractor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -23,7 +23,7 @@ import storage.Disciplines;
 import storage.Teams;
 import util.JavaFXUtil;
 
-public class EditTeamController {
+public class EditTeamController implements Initializable {
 
 	@FXML TextField teamNameField;
 	@FXML ComboBox<String> discCombo; 
@@ -34,8 +34,8 @@ public class EditTeamController {
 	private Team uneditedTeam;
 	
 	
-	@FXML
-	public void initialize() {
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		JavaFXUtil.setCancelButton(cancelButton);
 		ObservableList<String> discps = FXCollections.observableArrayList();
 		for (Discipline d : Disciplines.getInstance().getAll()) {

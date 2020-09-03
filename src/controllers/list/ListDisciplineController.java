@@ -2,15 +2,15 @@ package controllers.list;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 import controllers.edit.EditDisciplineController;
 import entities.Discipline;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,7 +28,7 @@ import javafx.stage.StageStyle;
 import storage.Disciplines;
 import util.JavaFXUtil;
 
-public class ListDisciplineController {
+public class ListDisciplineController implements Initializable {
 	@FXML private GridPane table;
 	@FXML private AnchorPane anchor;
 	@FXML private Button cancelButton;	
@@ -36,8 +36,8 @@ public class ListDisciplineController {
 	
 	private static Stage stage;
 	
-	@FXML
-	public void initialize() {
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		JavaFXUtil.setCancelButton(cancelButton);
 		fillTable();
 	}

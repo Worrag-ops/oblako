@@ -1,8 +1,12 @@
 package controllers.create;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import entities.Discipline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -12,7 +16,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import storage.Disciplines;
 
-public class DisciplineController {
+public class DisciplineController implements Initializable {
 	@FXML private ScrollPane discipline_create;
 	@FXML private ComboBox<String> discCombo;
 	@FXML private TextField discName;
@@ -21,6 +25,11 @@ public class DisciplineController {
 	Stage create_stage = new Stage();
 	
 	//Create new discipline
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+	
+	}
 	
 	@FXML
 	private void cancelButton(ActionEvent event) {

@@ -82,9 +82,11 @@ public class Controller {
 	@FXML private TableColumn<BetView, String> tableBook;
 	@FXML private TableColumn tableControl;
 	
+	//private static Controller controller;
 	
 	@FXML
 	public void initialize(){ 	
+		//Controller.Controller.setController(this);
 		filterDateStart.setValue(LocalDate.now().minusDays(7));
 		filterDateEnd.setValue(LocalDate.now());
 		ObservableList<String> books = FXCollections.observableArrayList();
@@ -444,4 +446,12 @@ public class Controller {
 	public TableView<BetView> getMainTable() {
 		return mainTable;
 	}
+
+	/*public static Controller getController() {
+		return controller;
+	}
+
+	public static void setController(Controller controller) {
+		Controller.controller = controller;
+	}*/
 }

@@ -1,11 +1,15 @@
 package controllers.edit;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import controllers.list.ListBookmakerController;
 import entities.Bookmaker;
 import entities.MyCurrency;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -16,7 +20,7 @@ import storage.Bookmakers;
 import storage.Currencies;
 import util.JavaFXUtil;
 
-public class EditBookmakerController {
+public class EditBookmakerController implements Initializable {
 
 	@FXML TextField bookNameField;
 	@FXML TextField bookBalanceField;
@@ -28,8 +32,8 @@ public class EditBookmakerController {
 	private Bookmaker uneditedBookmaker;
 	
 	
-	@FXML
-	public void initialize() {
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		JavaFXUtil.setCancelButton(cancelButton);
 		ObservableList<String> currs = FXCollections.observableArrayList();
 		for (MyCurrency c : Currencies.getInstance().getAll()) {

@@ -2,8 +2,6 @@ package application;
 	
 import java.sql.SQLException;
 
-import entities.Bet;
-import entities.Team;
 import h2.ConnectH2;
 import javafx.application.Application;
 import javafx.application.Platform;

@@ -1,20 +1,21 @@
 package controllers.edit;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import application.AutoCompleteComboBoxListener;
 import controllers.list.ListTournamentController;
 import entities.Discipline;
 import entities.Tournament;
-import h2.H2EntityIdExtractor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -25,14 +26,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import storage.Disciplines;
 import util.JavaFXUtil;
 
-public class EditTournamentController {
+public class EditTournamentController implements Initializable {
 
 	@FXML TextField fieldName;
 	@FXML Button cancelButton;
@@ -50,8 +50,8 @@ public class EditTournamentController {
 	private final int PLUSBTN_NUMBER = 1;
 	private final int HBOX_HEIGHT = 42;
 
-	@FXML
-	public void initialize() {
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		JavaFXUtil.setCancelButton(cancelButton);
 	}
 	

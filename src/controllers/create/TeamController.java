@@ -1,30 +1,28 @@
 package controllers.create;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import application.AutoCompleteComboBoxListener;
 import entities.Discipline;
 import entities.Team;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import storage.Disciplines;
 import storage.Teams;
 
-public class TeamController {
+public class TeamController implements Initializable {
 	@FXML private ScrollPane scroll;
 	@FXML private ComboBox<String> teamCombo;
 	@FXML private TextField teamName;
@@ -32,7 +30,8 @@ public class TeamController {
 	@FXML private VBox create_t;
 	@FXML private VBox main_vbox;
 	
-    public void initialize(){ //fill combobox with disciplines
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		ObservableList<String> discps = FXCollections.observableArrayList();
 		for (Discipline d : Disciplines.getInstance().getAll()) {
 			discps.add(d.getName());

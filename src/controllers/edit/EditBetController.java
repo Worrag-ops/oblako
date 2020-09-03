@@ -4,11 +4,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
-import java.rmi.UnexpectedException;
 import java.time.LocalDate;
+import java.util.ResourceBundle;
 
 import application.AutoCompleteComboBoxListener;
-import controllers.Controller;
 import entities.Bet;
 import entities.Bookmaker;
 import entities.Discipline;
@@ -20,6 +19,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -40,7 +40,7 @@ import storage.Teams;
 import storage.Tournaments;
 import util.JavaFXUtil;
 
-public class EditBetController {
+public class EditBetController implements Initializable {
 
 	@FXML private TextField coefField;
 	@FXML private TextField betField;
@@ -65,8 +65,8 @@ public class EditBetController {
 	      private boolean isCashOut;
 	      private Bet unneditedBet;
 	      
-	@FXML 	     
-	public void initialize() {
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		datePick.setValue(LocalDate.now());
 		
 		JavaFXUtil.setDoubleField(coefField);
@@ -169,7 +169,6 @@ public class EditBetController {
 		Discipline discipline = Disciplines.getInstance().get(discName);
 		Team team1 = Teams.getInstance().get(teamName1, discipline);
 		Team team2 = Teams.getInstance().get(teamName2, discipline);	
-		System.out.println(team1.getName() + " " + team2.getName());
 		Tournament tournament = Tournaments.getInstance().get(tourName);
 		BigDecimal profit;
 		// Calculating profit
@@ -246,8 +245,8 @@ public class EditBetController {
 		{
 		   throw new RuntimeException(exception);
 		} 
-		Controller controller = fxmlLoads.getController();
-		controller.getMainTable().refresh();
+		//Controller controller = (Controller) fxmlLoads.getController();
+		//Controller.getController().fillTable();
 	}
 	
 }

@@ -1,17 +1,18 @@
 package controllers.create;
 
 import java.math.BigDecimal;
+import java.net.URL;
 import java.time.LocalDate;
+import java.util.ResourceBundle;
 
 import application.AutoCompleteComboBoxListener;
 import entities.Bookmaker;
 import entities.MyCurrency;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -23,7 +24,7 @@ import storage.Bookmakers;
 import storage.Currencies;
 import util.JavaFXUtil;
 
-public class BookmakerController {
+public class BookmakerController implements Initializable {
 	
 	@FXML private TextField bookName;
 	@FXML private TextField numericField;
@@ -31,7 +32,8 @@ public class BookmakerController {
 	@FXML private DatePicker datePick;
 	@FXML private Label bookError;
 	
-	public void initialize(){ 
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		datePick.setValue(LocalDate.now());   
 		JavaFXUtil.setDoubleField(numericField);
 		ObservableList<String> currs = FXCollections.observableArrayList();

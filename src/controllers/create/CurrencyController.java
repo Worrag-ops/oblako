@@ -1,10 +1,12 @@
 package controllers.create;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import entities.MyCurrency;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -14,14 +16,15 @@ import javafx.stage.Stage;
 import storage.Currencies;
 import util.JavaFXUtil;
 
-public class CurrencyController {
+public class CurrencyController implements Initializable {
 	
 	@FXML private TextField currName;
 	@FXML private TextField numericField;
 	@FXML private CheckBox isMainBox;
 	@FXML private Label currError;
 	
-    public void initialize(){ 
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		JavaFXUtil.setDoubleField(numericField);
     }
     

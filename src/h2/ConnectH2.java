@@ -2,9 +2,6 @@ package h2;
 
 import java.sql.*;
 
-import entities.Discipline;
-import entities.Team;
-
 public class ConnectH2 {
 
 	private static final String URL = "jdbc:h2:~/testdb";

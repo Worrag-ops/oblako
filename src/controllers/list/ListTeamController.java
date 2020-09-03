@@ -2,19 +2,17 @@ package controllers.list;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ResourceBundle;
 
-import controllers.edit.EditDisciplineController;
 import controllers.edit.EditTeamController;
-import entities.Bookmaker;
 import entities.Team;
-import entities.view.BetView;
-import entities.view.BookmakerView;
 import entities.view.TeamView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
@@ -31,12 +29,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import storage.Bookmakers;
 import storage.Disciplines;
 import storage.Teams;
 import util.JavaFXUtil;
 
-public class ListTeamController {
+public class ListTeamController implements Initializable {
 	
 	@FXML private VBox root;
 	@FXML private TableView<TeamView> table;
@@ -48,8 +45,8 @@ public class ListTeamController {
 	
 	private static Stage stage;
 	
-	@FXML
-	public void initialize() {
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		JavaFXUtil.setCancelButton(cancelButton);
 		fillTable();
 	}

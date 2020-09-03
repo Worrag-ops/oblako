@@ -1,26 +1,21 @@
 package controllers.edit;
 
-import java.io.IOException;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 import controllers.list.ListDisciplineController;
 import entities.Discipline;
-import h2.ConnectH2;
-import h2.H2EntityIdExtractor;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import storage.Disciplines;
 import util.JavaFXUtil;
 
-public class EditDisciplineController {
+public class EditDisciplineController implements Initializable {
 
 	@FXML TextField discName;
 	@FXML ComboBox<String> discCombo; 
@@ -30,8 +25,8 @@ public class EditDisciplineController {
 	private int disc_id; 
 	private Discipline uneditedDiscipline;
 	
-	@FXML
-	public void initialize() {
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		JavaFXUtil.setCancelButton(cancelButton);
 	}
 	

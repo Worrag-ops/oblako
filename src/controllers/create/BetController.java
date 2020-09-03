@@ -175,7 +175,6 @@ public class BetController implements Initializable {
 			Teams.getInstance().add(team2);
 			team2.save();
 		}
-		System.out.println(team1.getName() + " " + team2.getName());
 		Tournament tournament = Tournaments.getInstance().get(tourName);
 		if (tournament == null) { //if tournament doesn't exist, we will create it
 			List <Discipline> tournamentDiscipline = new ArrayList<>();
