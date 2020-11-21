@@ -1,6 +1,7 @@
 package controllers.edit;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,7 +28,9 @@ import javafx.stage.Stage;
 import storage.Bets;
 import storage.Disciplines;
 import storage.Teams;
+import util.FileUtil;
 import util.JavaFXUtil;
+import util.StringUtil;
 
 public class EditTeamController implements Initializable {
 
@@ -84,11 +87,31 @@ public class EditTeamController implements Initializable {
 		Discipline d = Disciplines.getInstance().get(discName);
 		
 		String logoPath = uneditedTeam.getLogoPath();
+		
 		if (logoFile != null) {
+			String discConstructedName = StringUtil.constructDirectoryName(discName);
+			File directory = new File(this.getClass().getResource("/").getPath() + "logo" + "/" + discConstructedName);
+			if (!directory.exists()) {
+				directory.mkdir();
+			}
+			String newlogoPath =  "logo" + "/" + discConstructedName + "/" + name + ".png";
+			System.out.println(logoPath);
+			File newLogo = new File(this.getClass().getResource("/").getPath() + newlogoPath);
 			try {
-				logoPath = logoFile.toURI().toURL().toString();
+				newLogo.createNewFile();
+				FileUtil.copyFile(logoFile, newLogo);
+			} catch (IOException e) {
+				errorLabel.setTextFill(Paint.valueOf("RED"));
+				errorLabel.setText("Ошибка сохранения лого");
+				e.printStackTrace();
+				return;
+			}
+	
+			try {
+				logoPath = newLogo.toURI().toURL().toString();
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
+				return;
 			}
 		}
 		Team newTeam = new Team(team_id, name, d, profit, logoPath);
