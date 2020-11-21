@@ -21,7 +21,7 @@ public class ConnectH2 {
 	public static void createTables() throws SQLException {
 		Statement st = conn.createStatement();
 		st.execute("CREATE TABLE IF NOT EXISTS disciplines (id int NOT NULL AUTO_INCREMENT, name char(50) NOT NULL, discType char(50) NOT NULL, UNIQUE(name), CONSTRAINT disciplines_pk PRIMARY KEY (id))");
-		st.execute("CREATE TABLE IF NOT EXISTS teams (id int NOT NULL AUTO_INCREMENT, name char(50) NOT NULL, discipline_id int NOT NULL REFERENCES disciplines(id) ON DELETE CASCADE, profit decimal NOT NULL DEFAULT 0, UNIQUE(name, discipline_id), CONSTRAINT teams_pk PRIMARY KEY (id))");
+		st.execute("CREATE TABLE IF NOT EXISTS teams (id int NOT NULL AUTO_INCREMENT, name char(50) NOT NULL, discipline_id int NOT NULL REFERENCES disciplines(id) ON DELETE CASCADE, profit decimal NOT NULL DEFAULT 0, logo_path char(128), UNIQUE(name, discipline_id), CONSTRAINT teams_pk PRIMARY KEY (id))");
 		st.execute("CREATE TABLE IF NOT EXISTS tournaments (id int NOT NULL AUTO_INCREMENT, name char(80) NOT NULL, profit decimal NOT NULL DEFAULT 0, UNIQUE(name), CONSTRAINT tournaments_pk PRIMARY KEY (id))");
 		st.execute("CREATE TABLE IF NOT EXISTS tournament_discipline (tournament_id int NOT NULL REFERENCES tournaments(id) ON DELETE CASCADE, discipline_id int NOT NULL REFERENCES disciplines(id) ON DELETE CASCADE, CONSTRAINT tour_disc_pk PRIMARY KEY (tournament_id, discipline_id))");
 		st.execute("CREATE TABLE IF NOT EXISTS currency (id int NOT NULL AUTO_INCREMENT, name char(50) NOT NULL, isMain bool, equalsToMain float NOT NULL, CONSTRAINT currency_pk PRIMARY KEY (id))");

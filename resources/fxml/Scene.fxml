@@ -178,8 +178,8 @@
                   <TableColumn fx:id="tableId" editable="false" minWidth="0.0" prefWidth="0.0" sortable="false" text="Id" visible="false" />
                 <TableColumn fx:id="tableDate" prefWidth="105.0" text="Дата" />
                 <TableColumn fx:id="tableDisc" prefWidth="120.0" text="Диспиплина" />
-                  <TableColumn fx:id="tableTeam1" prefWidth="130.0" text="Команда 1" />
-                  <TableColumn fx:id="tableTeam2" prefWidth="130.0" text="Команда 2" />
+                  <TableColumn fx:id="tableTeam1" prefWidth="145.0" text="Команда 1" />
+                  <TableColumn fx:id="tableTeam2" prefWidth="145.0" text="Команда 2" />
                   <TableColumn fx:id="tableEvent" prefWidth="109.0" text="Событие" />
                   <TableColumn fx:id="tableBet" prefWidth="100.0" text="Ставка" />
                   <TableColumn fx:id="tableCoef" prefWidth="64.0" text="Кэф" />

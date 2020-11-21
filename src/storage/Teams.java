@@ -59,7 +59,7 @@ public class Teams {
 			while (result.next()) {
 				String discName = H2EntityIdExtractor.getNameForEntById("discipline", result.getInt("discipline_id"));
 				Discipline d = Disciplines.getInstance().get(discName);
-				Team t = new Team(result.getInt("id"), result.getString("name"),d, result.getBigDecimal("profit"));
+				Team t = new Team(result.getInt("id"), result.getString("name"),d, result.getBigDecimal("profit"), result.getString("logo_path"));
 				this.add(t);
 			}
 		} catch (SQLException e) {

@@ -165,13 +165,13 @@ public class BetController implements Initializable {
 		Discipline discipline = Disciplines.getInstance().get(discName);
 		Team team1 = Teams.getInstance().get(teamName1, discipline);
 		if (team1 == null) { //if team doesn't exist, we will create it
-			team1 = new Team(teamName1, discipline);
+			team1 = new Team(teamName1, discipline, "");
 			Teams.getInstance().add(team1);
 			team1.save();
 		}
 		Team team2 = Teams.getInstance().get(teamName2, discipline);	
 		if (team2 == null) { //if team doesn't exist, we will create it
-			team2 = new Team(teamName2, discipline);
+			team2 = new Team(teamName2, discipline, "");
 			Teams.getInstance().add(team2);
 			team2.save();
 		}

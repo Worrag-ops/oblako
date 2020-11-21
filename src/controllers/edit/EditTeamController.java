@@ -1,6 +1,8 @@
 package controllers.edit;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -10,13 +12,17 @@ import entities.Discipline;
 import entities.Team;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import storage.Bets;
 import storage.Disciplines;
@@ -26,12 +32,16 @@ import util.JavaFXUtil;
 public class EditTeamController implements Initializable {
 
 	@FXML TextField teamNameField;
-	@FXML ComboBox<String> discCombo; 
+	@FXML TextField logoPathField;
+	@FXML ComboBox<String> discCombo;
+	@FXML ImageView logoImage;
+	@FXML Button logoPickButton;
 	@FXML Button cancelButton;
 	@FXML Label errorLabel;
 	
 	private int team_id; 
 	private Team uneditedTeam;
+	private File logoFile = null;
 	
 	
 	@Override
@@ -42,6 +52,20 @@ public class EditTeamController implements Initializable {
 			discps.add(d.getName());
 		}
 		discCombo.setItems(discps); 
+	}
+	
+	@FXML
+	private void selectLogo(ActionEvent event) throws MalformedURLException {
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Select logo");
+		fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PNG", "*.png"));
+
+		logoFile = fc.showOpenDialog(logoPickButton.getScene().getWindow());
+        if (logoFile != null) {
+            logoPathField.setText(logoFile.getAbsolutePath());
+            logoImage.setImage(new Image(logoFile.toURI().toURL().toString()));
+        }
+		
 	}
 	
 	@FXML
@@ -58,7 +82,16 @@ public class EditTeamController implements Initializable {
 		}
 		
 		Discipline d = Disciplines.getInstance().get(discName);
-		Team newTeam = new Team(team_id, name, d, profit);
+		
+		String logoPath = uneditedTeam.getLogoPath();
+		if (logoFile != null) {
+			try {
+				logoPath = logoFile.toURI().toURL().toString();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+		Team newTeam = new Team(team_id, name, d, profit, logoPath);
 		
 		if (!uneditedTeam.equals(newTeam)) {
 			for (Team t : Teams.getInstance().getAll()) {
@@ -74,7 +107,7 @@ public class EditTeamController implements Initializable {
 			for (Bet b : Bets.getInstance().getAll()) {
 				if (b.getTeamFor().equals(uneditedTeam) || b.getTeamOpp().equals(uneditedTeam)) {
 					errorLabel.setTextFill(Paint.valueOf("RED"));
-					errorLabel.setText("Невозможно изменить дисциплину команды, которая уже участвовала в ставках!");
+					errorLabel.setText("Невозможно изменить дисциплину команды, которая уже участвовала в матчах!");
 					return;			
 				}
 			}
@@ -82,7 +115,8 @@ public class EditTeamController implements Initializable {
 		
 		if(newTeam.update()){
 			uneditedTeam.setName(name);
-			uneditedTeam.setDiscipline(d);			
+			uneditedTeam.setDiscipline(d);	
+			uneditedTeam.setLogoPath(logoPath);	
 			refreshPrevWindow();
 	    	Stage stage = (Stage) teamNameField.getScene().getWindow();
 			stage.close();
@@ -96,6 +130,11 @@ public class EditTeamController implements Initializable {
 	public void setTeamFields(Team t) {
 		String teamName = t.getName();
 		teamNameField.setText(teamName);	
+		String logoPath = t.getLogoPath();
+		if (logoPath != null && !logoPath.isEmpty()) {
+			logoPathField.setText(t.getLogoPath());
+			logoImage.setImage(new Image(t.getLogoPath()));			
+		}
 		discCombo.setValue(t.getDiscipline().getName());
 		uneditedTeam = t;
 

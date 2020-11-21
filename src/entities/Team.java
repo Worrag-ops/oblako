@@ -12,22 +12,25 @@ public class Team {
 	private String name;
 	private Discipline discipline;
 	private BigDecimal profit;
+	private String logoPath;
 
-	public Team (int id, String name, Discipline discipline, BigDecimal profit) {
-		this(name, discipline, profit);
+	public Team (int id, String name, Discipline discipline, BigDecimal profit, String logoPath) {
+		this(name, discipline, profit, logoPath);
 		this.id = id;
 	}
 	
-	public Team (String name, Discipline discipline) {
+	public Team (String name, Discipline discipline, String logoPath) {
 		setName(name);
 		setDiscipline(discipline);
 		setProfit(BigDecimal.ZERO);
+		setLogoPath(logoPath);
 	}
 	
-	public Team (String name, Discipline discipline, BigDecimal profit) {
+	public Team (String name, Discipline discipline, BigDecimal profit, String logoPath) {
 		setName(name);
 		setDiscipline(discipline);
 		setProfit(profit);
+		setLogoPath(logoPath);
 	}
 
 	public String getName() {
@@ -59,10 +62,11 @@ public class Team {
 			int discId = H2EntityIdExtractor.getIdForEntByName("discipline", this.getDiscipline().getName());
 			if (discId == 0) return false;
 			
-			PreparedStatement pst = ConnectH2.getConnection().prepareStatement("insert into teams(name, discipline_id, profit) values(?,?,?)");
+			PreparedStatement pst = ConnectH2.getConnection().prepareStatement("insert into teams(name, discipline_id, profit, logo_path) values(?,?,?,?)");
 			pst.setString(1, this.getName());
 			pst.setInt(2, discId);
 			pst.setBigDecimal(3, this.getProfit());
+			pst.setString(4, this.getLogoPath());
 			pst.execute();
 			
 			this.setId(H2EntityIdExtractor.getTeamId(this.getName(), this.getDiscipline().getName()));
@@ -88,11 +92,12 @@ public class Team {
 	public boolean update() {
 		try {
 			int discipline_id = this.getDiscipline().getId();
-			PreparedStatement pst = ConnectH2.getConnection().prepareStatement("UPDATE teams SET name = ?, discipline_id = ?, profit = ? WHERE id = ?");
+			PreparedStatement pst = ConnectH2.getConnection().prepareStatement("UPDATE teams SET name = ?, discipline_id = ?, profit = ?, logo_path = ? WHERE id = ?");
 			pst.setString(1, this.getName());
 			pst.setInt(2, discipline_id);
 			pst.setBigDecimal(3, this.getProfit());
-			pst.setInt(4, this.getId());
+			pst.setString(4, this.getLogoPath());
+			pst.setInt(5, this.getId());
 			pst.execute();
 			return true;
 		} catch (SQLException e) {
@@ -122,5 +127,13 @@ public class Team {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getLogoPath() {
+		return logoPath;
+	}
+
+	public void setLogoPath(String logoPath) {
+		this.logoPath = logoPath;
 	}
 }

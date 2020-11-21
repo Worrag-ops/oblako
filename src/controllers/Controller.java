@@ -29,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -155,8 +156,6 @@ public class Controller {
 		tableId.setCellValueFactory(new PropertyValueFactory<BetView, Integer>("id"));
 		tableDate.setCellValueFactory(new PropertyValueFactory<BetView, LocalDate>("date"));
 		tableDisc.setCellValueFactory(new PropertyValueFactory<BetView, String>("discipline"));
-		tableTeam1.setCellValueFactory(new PropertyValueFactory<BetView, String>("teamFor"));
-		tableTeam2.setCellValueFactory(new PropertyValueFactory<BetView, String>("teamOpp"));
 		tableEvent.setCellValueFactory(new PropertyValueFactory<BetView, String>("betEvent"));		
 		tableCoef.setCellValueFactory(new PropertyValueFactory<BetView, Float>("coefficient"));	
 		tableBet.setCellValueFactory(new PropertyValueFactory<BetView, Double>("moneyBet"));	
@@ -167,72 +166,9 @@ public class Controller {
 		tableCashOut.setCellValueFactory(new PropertyValueFactory<BetView, String>("isCashOut"));		
 		tableTour.setCellValueFactory(new PropertyValueFactory<BetView, String>("tourn"));	
 		tableBook.setCellValueFactory(new PropertyValueFactory<BetView, String>("book"));
-		
-		Callback<TableColumn<BetView, String>, TableCell<BetView, String>> cellFactoryControl = (param) -> {
-			
-			TableCell<BetView, String> cell = new TableCell<BetView, String>() {
-				@Override
-				public void updateItem(String item, boolean empty) {
-					super.updateItem(item, empty);
-					if (empty) {
-						setGraphic(null);
-						setText(null);
-					} else {
-						HBox buttonsContainer = new HBox(6);
-						ImageView editButton = new ImageView(new Image("/icon/edit_32.png"));
-						editButton.setFitHeight(30);
-						editButton.setFitWidth(30);
-						editButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-					        @Override
-					        public void handle(MouseEvent t) {			     
-					        	URL path = getClass().getClassLoader().getResource("fxml/edit/editBet.fxml");
-					    		Pane page = null;
-					    		FXMLLoader fxmlLoads = new FXMLLoader(path);
-					    		try
-					    		{
-					    		   page = (Pane) fxmlLoads.load();
-					    		}
-					    		   catch (IOException exception)
-					    		{
-					    		   throw new RuntimeException(exception);
-					    		} 
-					    		Scene scene = new Scene(page);
-					    		scene.getStylesheets().add(getClass().getClassLoader().getResource("css/application.css").toExternalForm());
-					    		Stage stage = new Stage(); 
-					    		stage.setScene(scene);
-					    		stage.initStyle(StageStyle.UNDECORATED);
-					        	EditBetController controller = fxmlLoads.getController();
-					        	
-					        	BetView bv = getTableView().getItems().get(getIndex());
-					        	Bet bet = Bets.getInstance().get(bv.getId());
-					        	controller.setBetFields(bet);										 //
-				    			stage.initModality(Modality.APPLICATION_MODAL); 
-				    			stage.showAndWait();
-					        }
-					    });
-						
-						ImageView deleteButton = new ImageView(new Image("/icon/remove_ent_32.png"));
-						deleteButton.setFitHeight(30);
-						deleteButton.setFitWidth(30);	
-						deleteButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-					        @Override
-					        public void handle(MouseEvent t) {
-					        	BetView bv = getTableView().getItems().get(getIndex());
-					        	Bet bet = Bets.getInstance().get(bv.getId());
-					        	JavaFXUtil.deleteWindow(bet, root);
-					        }
-					    });
-						buttonsContainer.getChildren().add(editButton);
-						buttonsContainer.getChildren().add(deleteButton);					
-						setGraphic(buttonsContainer);
-					
-					}
-				}
-			};
-			return cell;
-		};
-		
-		tableControl.setCellFactory(cellFactoryControl);
+		setCallbackControl(tableControl);
+		setCallbackTeamName(tableTeam1, false);
+		setCallbackTeamName(tableTeam2, true);
 		
 		ObservableList<BetView> views = FXCollections.observableArrayList();
 		LocalDate dateStart = filterDateStart.getValue();
@@ -321,115 +257,66 @@ public class Controller {
 	}
 	
 	@FXML
-	private void testPrintTableDisciplines() {
-		try {
-			Statement st = ConnectH2.getConnection().createStatement();
-			ResultSet result = st.executeQuery("SELECT * FROM disciplines");
-			System.out.println(">>>>> DISCIPLINES <<<<<");
-			while (result.next()) {
-				System.out.println(result.getInt(1) + ": " + result.getString(2) + " " + result.getString(3));
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+	private void testPrintTableDisciplines() throws SQLException {
+		ResultSet result = getTestResultSet("disciplines", ">>>>> DISCIPLINES <<<<<");
+		while (result.next()) {
+			System.out.println(result.getInt(1) + ": " + result.getString(2) + " " + result.getString(3));
 		}
 	}
 	
 	@FXML
-	private void testPrintTableTournamentDiscipline() {
-		try {
-			Statement st = ConnectH2.getConnection().createStatement();
-			ResultSet result = st.executeQuery("SELECT * FROM tournament_discipline");
-			System.out.println(">>>>> tournament_discipline <<<<<");
+	private void testPrintTableTournamentDiscipline() throws SQLException {
+			ResultSet result = getTestResultSet("tournament_discipline", ">>>>> TOURNAMENT_DISCIPLINE <<<<<");
 			int i = 0;
 			while (result.next()) {
 				i++;
 				System.out.println(String.valueOf(i) + ": " + result.getInt(1) + " " + result.getInt(2));
 			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@FXML
-	private void testPrintTableTeams() {
-		try {
-			Statement st = ConnectH2.getConnection().createStatement();
-			ResultSet result = st.executeQuery("SELECT * FROM teams");
-			System.out.println(">>>>> TEAMS <<<<<");
+	private void testPrintTableTeams() throws SQLException {
+			ResultSet result = getTestResultSet("teams", ">>>>> TEAMS <<<<<");
 			while (result.next()) {
-				System.out.println(result.getString(1) + ": " + result.getString(2) + " " + result.getString(3) + " " + result.getBigDecimal(4));
+				System.out.println(result.getString(1) + ": " + result.getString(2) + " " + result.getString(3) + " " + result.getBigDecimal(4) + " " + result.getString(5));
 			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@FXML
-	private void testPrintTableTournaments() {
-		try {
-			Statement st = ConnectH2.getConnection().createStatement();
-			ResultSet result = st.executeQuery("SELECT * FROM tournaments");
-			System.out.println(">>>>> TOURNAMENTS <<<<<");
+	private void testPrintTableTournaments() throws SQLException {
+			ResultSet result = getTestResultSet("tournaments", ">>>>> TOURNAMENTS <<<<<");
 			while (result.next()) {
 				System.out.println(result.getInt(1) + ": " + result.getString(2) + result.getBigDecimal(3));
 			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@FXML
-	private void testPrintTableCurrency() {
-		try {
-			Statement st = ConnectH2.getConnection().createStatement();
-			ResultSet result = st.executeQuery("SELECT * FROM currency");
+	private void testPrintTableCurrency() throws SQLException {
+			ResultSet result = getTestResultSet("currency", ">>>>> CURRENCY <<<<<");
 			int i = 0;
-			System.out.println(">>>>> CURRENCY <<<<<");
 			while (result.next()) {
 				i++;
 				System.out.println(String.valueOf(i) + ": " + result.getString(2) + " " + result.getBoolean(3) + " " + result.getDouble(4));
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+			}		
+	}
+	
+	@FXML
+	private void testPrintTableBookmakers() throws SQLException {
+		ResultSet result = getTestResultSet("bookmakers", ">>>>> BOOKMAKERS <<<<<");
+		int i = 0;
+		while (result.next()) {
+			i++;
+			System.out.println(String.valueOf(i) + ": " + result.getString(2) + " " + result.getBigDecimal(3) + " " + result.getInt(4));
 		}		
 	}
 	
 	@FXML
-	private void testPrintTableBookmakers() {
-		try {
-			Statement st = ConnectH2.getConnection().createStatement();
-			ResultSet result = st.executeQuery("SELECT * FROM bookmakers");
-			int i = 0;
-			System.out.println(">>>>> BOOKMAKERS <<<<<");
-			while (result.next()) {
-				i++;
-				System.out.println(String.valueOf(i) + ": " + result.getString(2) + " " + result.getBigDecimal(3) + " " + result.getInt(4));
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}		
-	}
-	
-	@FXML
-	private void testPrintTableBets() {
-		try {
-			Statement st = ConnectH2.getConnection().createStatement();
-			ResultSet result = st.executeQuery("SELECT * FROM bets");
-			int i = 0;
-			System.out.println(">>>>> BETS <<<<<");
-			while (result.next()) {
-				i++;
-				System.out.println(String.valueOf(i) + ": " + result.getObject(2) + " " + result.getString(3) + " " + result.getString(4) + " " + result.getString(5) + " " + result.getString(6) + " " + result.getString(7) + " " + result.getFloat(8) + " " + result.getDouble(9) + " " + result.getString(10) + " " + result.getBigDecimal(11)  + " " + result.getInt(12) + " " + result.getBoolean(13));
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+	private void testPrintTableBets() throws SQLException {
+		ResultSet result = getTestResultSet("bets", ">>>>> BETS <<<<<");
+		int i = 0;
+		while (result.next()) {
+			i++;
+			System.out.println(String.valueOf(i) + ": " + result.getObject(2) + " " + result.getString(3) + " " + result.getString(4) + " " + result.getString(5) + " " + result.getString(6) + " " + result.getString(7) + " " + result.getFloat(8) + " " + result.getDouble(9) + " " + result.getString(10) + " " + result.getBigDecimal(11)  + " " + result.getInt(12) + " " + result.getBoolean(13));
 		}		
 	}
 		
@@ -441,6 +328,117 @@ public class Controller {
 			} catch (SQLException e) {
 				e.printStackTrace();
 		}	
+	}
+	
+	private ResultSet getTestResultSet(String tableName, String print) {
+		try {
+			Statement st = ConnectH2.getConnection().createStatement();
+			ResultSet result = st.executeQuery("SELECT * FROM " + tableName);
+			System.out.println(print);
+			return result;		
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;	
+		}			
+	}
+	
+	private void setCallbackControl(TableColumn tb) {
+		Callback<TableColumn<BetView, String>, TableCell<BetView, String>> cellFactoryControl = (param) -> {
+			TableCell<BetView, String> cell = new TableCell<BetView, String>() {
+				@Override
+				public void updateItem(String item, boolean empty) {
+					super.updateItem(item, empty);
+					if (empty) {
+						setGraphic(null);
+						setText(null);
+					} else {
+						HBox buttonsContainer = new HBox(6);
+						ImageView editButton = new ImageView(new Image("/icon/edit_32.png"));
+						editButton.setFitHeight(30);
+						editButton.setFitWidth(30);
+						editButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+					        @Override
+					        public void handle(MouseEvent t) {			     
+					        	URL path = getClass().getClassLoader().getResource("fxml/edit/editBet.fxml");
+					    		Pane page = null;
+					    		FXMLLoader fxmlLoads = new FXMLLoader(path);
+					    		try
+					    		{
+					    		   page = (Pane) fxmlLoads.load();
+					    		}
+					    		   catch (IOException exception)
+					    		{
+					    		   throw new RuntimeException(exception);
+					    		} 
+					    		Scene scene = new Scene(page);
+					    		scene.getStylesheets().add(getClass().getClassLoader().getResource("css/application.css").toExternalForm());
+					    		Stage stage = new Stage(); 
+					    		stage.setScene(scene);
+					    		stage.initStyle(StageStyle.UNDECORATED);
+					        	EditBetController controller = fxmlLoads.getController();
+					        	
+					        	BetView bv = getTableView().getItems().get(getIndex());
+					        	Bet bet = Bets.getInstance().get(bv.getId());
+					        	controller.setBetFields(bet);										 //
+				    			stage.initModality(Modality.APPLICATION_MODAL); 
+				    			stage.showAndWait();
+					        }
+					    });
+						
+						ImageView deleteButton = new ImageView(new Image("/icon/remove_ent_32.png"));
+						deleteButton.setFitHeight(30);
+						deleteButton.setFitWidth(30);	
+						deleteButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+					        @Override
+					        public void handle(MouseEvent t) {
+					        	BetView bv = getTableView().getItems().get(getIndex());
+					        	Bet bet = Bets.getInstance().get(bv.getId());
+					        	JavaFXUtil.deleteWindow(bet, root);
+					        }
+					    });
+						buttonsContainer.getChildren().add(editButton);
+						buttonsContainer.getChildren().add(deleteButton);					
+						setGraphic(buttonsContainer);
+					
+					}
+				}
+			};
+			return cell;
+		};
+		tb.setCellFactory(cellFactoryControl);
+	}
+	
+	private void setCallbackTeamName(TableColumn tb, boolean isTeamOpp) {
+		Callback<TableColumn<BetView, String>, TableCell<BetView, String>> cellFactoryName = (param) -> {
+			TableCell<BetView, String> cell = new TableCell<BetView, String>() {
+				@Override
+				public void updateItem(String item, boolean empty) {
+					super.updateItem(item, empty);
+					if (empty) {
+						setGraphic(null);
+						setText(null);
+					} else {
+						HBox nameContainer = new HBox(130);
+						nameContainer.setSpacing(5);
+			        	BetView bv = getTableView().getItems().get(getIndex());
+			        	Bet bet = Bets.getInstance().get(bv.getId());
+			        	Team team = isTeamOpp ? bet.getTeamOpp() : bet.getTeamFor();
+			        	String teamLogoPath = team.getLogoPath();
+			        	Label name = new Label(team.getName());
+						if (teamLogoPath != null && !teamLogoPath.isEmpty()) {
+				        	ImageView logo = new ImageView(new Image(team.getLogoPath()));	
+				        	logo.setFitHeight(30);
+				        	logo.setFitWidth(30);
+				        	nameContainer.getChildren().add(logo);
+						}			
+			        	nameContainer.getChildren().add(name);
+						setGraphic(nameContainer);
+					}
+				}
+			};
+			return cell;
+		};		
+		tb.setCellFactory(cellFactoryName);
 	}
 	
 	public TableView<BetView> getMainTable() {

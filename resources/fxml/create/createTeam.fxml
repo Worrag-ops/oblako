@@ -14,11 +14,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="create_t" prefHeight="300.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.create.TeamController">
+<VBox fx:id="create_t" prefHeight="340.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.create.TeamController">
    <children>
-		 <ScrollPane fx:id="scroll" accessibleHelp="Team Create" accessibleText="Team Create" layoutX="410.0" layoutY="83.0" prefHeight="300.0" prefWidth="800.0">
+		 <ScrollPane fx:id="scroll" accessibleHelp="Team Create" accessibleText="Team Create" layoutX="410.0" layoutY="83.0" prefHeight="340.0" prefWidth="800.0">
                <content>
-                  <VBox fx:id="main_vbox" alignment="TOP_CENTER" prefHeight="297.0" prefWidth="798.0" spacing="15.0">
+                  <VBox fx:id="main_vbox" alignment="TOP_CENTER" prefHeight="338.0" prefWidth="798.0" spacing="15.0">
                      <children>
                         <Label opacity="0.78" text="Новая команда">
                            <font>
@@ -66,12 +66,42 @@
                               <Rectangle2D />
                            </viewport>
                         </ImageView>
-                              <ComboBox fx:id="teamCombo" editable="true" prefWidth="308.0" translateX="-12.5" visibleRowCount="8">
+                              <ComboBox fx:id="teamCombo" editable="true" prefHeight="25.0" prefWidth="308.0" translateX="-12.5" visibleRowCount="8">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin></ComboBox>
                            </children>
                         </HBox>
+                  <HBox alignment="TOP_CENTER" prefHeight="42.0" prefWidth="800.0">
+                     <children>
+                        <Label opacity="0.68" prefWidth="270.0" text="Логотип" translateX="33.0">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Label>
+                        <Button fx:id="logoPickButton" mnemonicParsing="false" onAction="#selectLogo" prefHeight="25.0" prefWidth="130.0" text="Выбрать" translateX="-25.0">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Button>
+                        <TextField fx:id="logoPathField" editable="false" prefHeight="25.0" prefWidth="308.0" translateX="-3.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                        <ImageView fx:id="logoImage" cache="true" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" translateX="5.0">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                        </ImageView>
+                     </children>
+                  </HBox>
                         <Separator prefWidth="200.0" />
                         <ButtonBar buttonMinWidth="100.0" prefHeight="40.0" prefWidth="200.0">
                            <buttons>
